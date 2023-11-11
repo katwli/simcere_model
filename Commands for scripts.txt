@@ -1,4 +1,4 @@
-Commands for get_referenced script
+Commands for get_cited script
 
 To initiate in command prompt (on my computer, may differ due to where it is saved): cd Documents\MIT soph\MCG
 
