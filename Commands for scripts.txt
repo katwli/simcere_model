@@ -1,0 +1,38 @@
+Commands for get referenced script
+
+To initiate in command prompt (on my computer, may differ due to where it is saved): cd Documents\MIT soph\MCG
+
+Call script: python get_cited.py func input out_type make_csv
+
+
+func: printer, get_referenced_by, get_mult
+	'printer': just prints out the get_referenced_by output, defaults to out_type='date_ID_list' and make_csv='False'
+	'get_referenced_by': the whole point of the script, defaults to out_type='date_ID_list', get_mult='False'
+	'get_mult': instead of input, insert name of text document containing everything you want to look at seperated by commas, either in form of url or PMID, calls get_referenced_by on each one
+
+
+input: PMID or url of the article in question
+
+out_type: count, PMid, dates, titles, date_title_list, date_ID_list
+	'count': returns an int of how many other articles referenced the given article
+	'PMid': returns a list of PMid's of other articles that referenced the given article
+	'dates': returns a sorted list of publication dates (month/year) of other articles that referenced the given article
+	'titles': returns a list of titles of other articles that referenced the given article
+	'date_title_list': returns a list of tuples (date, [titles]) sorted chronologically of other articles that referenced the given article
+	'date_ID_list': returns a list of tuples (date, [ID]) sorted chronologically of other articles that referenced the given article
+
+make_csv: True, False
+	'True': makes a csv file in the same location as script, only works for date_title_list and date_ID_list
+	'False': just returns output for other use, such as printer function
+
+
+
+Commands for get_ids script
+
+To initiate in command prompt (on my computer, may differ due to where it is saved): cd Documents\MIT soph\MCG
+
+Call script: python get_ids.py get_ids search_term article_cap file_name
+
+search_term: term to search Pubmed for, replace " " with "+"
+article_cap: a limit to how many articles it returns, default 50
+file_name: the name of the file the list will be printed to, the name to be used in get referenced script

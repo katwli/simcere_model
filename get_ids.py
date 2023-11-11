@@ -1,9 +1,20 @@
 import requests
 import xml.etree.ElementTree as ET
+import os
 
-def get_ids(term):
+def get_ids(term, article_cap=50, file_name=None):
+    def clear_term(term):
+        out = ""
+        for i in term:
+            if i != " ":
+                out += i
+            else:
+                out += "+"
+
     api_key = "e8969630ebd6acc333a0a0ac6c87aa994008"
-    num_articles = 5
+    num_articles = article_cap
+    term = clear_term(term)
+
     # URL for the PubMed API request
     url = f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?db=pubmed&term={term}&api_key={api_key}&retmax={num_articles}"
 
@@ -31,6 +42,26 @@ def get_ids(term):
         print("Error:", response.status_code, response.text)
 
 
-    return id_list[:num_articles]
+    return write_txt(id_list[:num_articles], file_name)
 
-print(get_ids('breast+cancer'))
+def write_txt(data, file_name="articles_to_check.txt"):
+        def make_str(data):
+            out = ""
+            for i in data:
+                out += i
+                out += ", "
+            return out
+
+        file_name = "articles_to_check.txt"
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(script_directory, file_name)
+        str_data = make_str(data)
+        
+        f = open(file_path, 'w')
+        f.write(str_data)
+        f.close
+
+        print(f"TXT file '{file_name}' has been created and saved at '{file_path}'.")
+
+
+get_ids('breast cancer', 5)
