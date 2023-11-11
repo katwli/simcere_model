@@ -64,4 +64,6 @@ def write_txt(data, file_name="articles_to_check.txt"):
         print(f"TXT file '{file_name}' has been created and saved at '{file_path}'.")
 
 
-get_ids('breast cancer', 5)
+if __name__ == '__main__':
+    args = sys.argv
+    globals()[args[1]](*args[2:])
