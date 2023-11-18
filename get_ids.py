@@ -1,48 +1,12 @@
 import requests
 import xml.etree.ElementTree as ET
 import os
+from selenium import webdriver
+from bs4 import BeautifulSoup
+from xml.etree import ElementTree as ET
+from selenium.webdriver.common.by import By
+import sys
 
-def get_ids(term, article_cap=50, file_name=None):
-    def clear_term(term):
-        out = ""
-        for i in term:
-            if i != " ":
-                out += i
-            else:
-                out += "+"
-
-    api_key = "e8969630ebd6acc333a0a0ac6c87aa994008"
-    num_articles = article_cap
-    term = clear_term(term)
-
-    # URL for the PubMed API request
-    url = f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?db=pubmed&term={term}&api_key={api_key}&retmax={num_articles}"
-
-    # Make the API request
-    response = requests.get(url)
-    id_list = []
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        
-        # Parse the XML response
-        xml_tree = ET.fromstring(response.content)
-        
-        # Extract and print the IDs
-        for record in xml_tree.iter("record"):
-            pmc_id = record.attrib.get("id")
-            if pmc_id:
-                id = "https://pubmed.ncbi.nlm.nih.gov/" + str(pmc_id[3:]) + "/"
-                id_list.append(id)
-        file = open('items.txt', 'w')
-        for id in id_list:
-            file.write(id+"\n")
-            
-        file.close()
-    else:
-        print("Error:", response.status_code, response.text)
-
-
-    return write_txt(id_list[:num_articles], file_name)
 
 def write_txt(data, file_name="articles_to_check.txt"):
         def make_str(data):
@@ -63,7 +27,31 @@ def write_txt(data, file_name="articles_to_check.txt"):
 
         print(f"TXT file '{file_name}' has been created and saved at '{file_path}'.")
 
-
+def get_ids(term, article_cap=50, file_name=None):
+        url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={term}&retmax={article_cap}"
+        def clean_id_list(list):
+            nums = [str(i) for i in range(10)]
+            out_list = []
+            for i in list:
+                if i[0] in nums:
+                    out_list.append(i)
+            return out_list[3:]
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                soup = BeautifulSoup(response.text, 'lxml')
+                text_elements = [element.get_text() for element in soup.find_all(string=True)]
+                text_elements = [text.strip() for text in text_elements if text.strip()]
+                return write_txt(clean_id_list(text_elements), file_name)
+            else:
+                print(f"Failed to retrieve the page. Status code: {response.status_code}")
+                return []
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            return []
+        
 if __name__ == '__main__':
     args = sys.argv
-    globals()[args[1]](*args[2:])
+    if len(args) != 1:
+        globals()[args[1]](*args[2:])
+
