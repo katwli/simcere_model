@@ -297,6 +297,6 @@ def get_mult(input_file='articles_to_check.txt', out_type='date_ID_list', make_c
 
 if __name__ == '__main__':
     args = sys.argv
-    if len(args) >= 3:
+    if len(args) >= 2:
         globals()[args[1]](*args[2:])
 
