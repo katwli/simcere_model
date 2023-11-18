@@ -248,7 +248,7 @@ def get_referenced_by(input, out_type='date_ID_list', make_csv='False'):
 def printer(input, input2='date_ID_list', input3='False'):
     print(get_referenced_by(input, input2, input3))    
 
-def get_mult(input_file, out_type='date_ID_list', make_csv='True'):
+def get_mult(input_file='articles_to_check.txt', out_type='date_ID_list', make_csv='True'):
     script_directory = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(script_directory, input_file)
     if input_file[-4:] != ".txt":
@@ -277,7 +277,7 @@ def get_mult(input_file, out_type='date_ID_list', make_csv='True'):
                         if current_item not in inputs:
                             inputs.append(current_item)
                             current_item = ''                
-
+        print(inputs)
         return inputs
 
     inputs = read_inputs_from_file(file_path)
@@ -299,3 +299,4 @@ if __name__ == '__main__':
     args = sys.argv
     if len(args) >= 3:
         globals()[args[1]](*args[2:])
+

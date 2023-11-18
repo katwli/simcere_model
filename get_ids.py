@@ -13,7 +13,7 @@ def write_txt(data, file_name="articles_to_check.txt"):
             out = ""
             for i in data:
                 out += i
-                out += ", "
+                out += ","
             return out
 
         file_name = "articles_to_check.txt"
@@ -54,4 +54,3 @@ if __name__ == '__main__':
     args = sys.argv
     if len(args) != 1:
         globals()[args[1]](*args[2:])
-
