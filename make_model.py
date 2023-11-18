@@ -12,8 +12,12 @@ def make_array(file_name, folder_name='output'):
                 if row:
                     dates.append(row[0])
                     counts.append(row[1])
+        
+        int_count = []
+        for item in counts[1:-1]:
+            int_count.append(int(item))
 
-        return int_dates(dates[1:-1]), counts[1:-1]
+        return int_dates(dates[1:-1]), int_count
 
     def int_dates(dates):
         month_map = {
@@ -40,7 +44,7 @@ def get_all_arrays(folder_name='output'):
     current_file_location = os.path.dirname(os.path.abspath(__file__))
     folder_path = os.path.join(current_file_location, folder_name)
     files = os.listdir(folder_path)
-    
+
     all_arrays = {}
     for file in files:
         all_arrays[file[21:-4]] = (make_array(file, folder_name))
