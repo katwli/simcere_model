@@ -16,7 +16,6 @@ def write_txt(data, file_name="articles_to_check.txt"):
                 out += ","
             return out
 
-        file_name = "articles_to_check.txt"
         script_directory = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(script_directory, file_name)
         str_data = make_str(data)
@@ -27,7 +26,7 @@ def write_txt(data, file_name="articles_to_check.txt"):
 
         print(f"TXT file '{file_name}' has been created and saved at '{file_path}'.")
 
-def get_ids(term, article_cap=50, file_name=None):
+def get_ids(term, article_cap=500, file_name="articles_to_check.txt"):
         url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={term}&retmax={article_cap}"
         def clean_id_list(list):
             nums = [str(i) for i in range(10)]

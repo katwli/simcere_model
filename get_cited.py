@@ -276,8 +276,7 @@ def get_mult(input_file='articles_to_check.txt', out_type='date_ID_list', make_c
                     if current_item != '':
                         if current_item not in inputs:
                             inputs.append(current_item)
-                            current_item = ''                
-        
+                            current_item = '' 
         return inputs
 
     inputs = read_inputs_from_file(file_path)

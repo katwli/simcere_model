@@ -4,8 +4,12 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import PolynomialFeatures
 
 driver = webdriver.Chrome()
 
@@ -98,22 +102,25 @@ def model(data, PMID):
 
     now = data[2]
 
-    model = LogisticRegression()
-    model.fit(X, Y)
+    poly_features = PolynomialFeatures(4)
+    X_poly = poly_features.fit_transform(X)
 
-    X_pred = np.arange(0, now, 1).reshape(-1, 1)
+    model = LinearRegression()
+    model.fit(X_poly, Y)
 
-    y_pred = model.predict(X_pred)
+    X_plot = np.arange(0, now, 1).reshape(-1, 1)
+    X_plot_poly = poly_features.transform(X_plot)
+    y_plot_pred = model.predict(X_plot_poly)
 
     plt.scatter(X, Y, color='black', label='Actual')
-    plt.plot(X_pred, y_pred, color='blue', linewidth=3, label='Predicted')
-    plt.xlabel('X (Feature)')
-    plt.ylabel('y (Target Variable)')
-    plt.title('Logistic Regression for ' + PMID)
+    plt.plot(X_plot, y_plot_pred, label=f'Polynomial Regression (Degree {4})', color='red')
+    plt.xlabel('X (Months since publication)')
+    plt.ylabel('y (Articles citing)')
+    plt.title('Regression for ' + PMID)
     plt.legend()
     plt.show() 
 
-def log_reg_all(data_dict=None):
+def reg_all(data_dict=None):
     if data_dict is None:
         data_dict = get_all_arrays()
     for i in data_dict:
@@ -123,34 +130,20 @@ def log_reg_all(data_dict=None):
             model(data_dict[i], i)
 
 
-def gen_log_reg(data_dict=None):
+def plt_all(data_dict=None):
     if data_dict is None:
         data_dict = get_all_arrays()
     datasets = []
     for i in data_dict:
         datasets.append((data_dict[i][0], data_dict[i][1]))
 
-    X_all = np.concatenate([data[0] for data in datasets]).reshape(-1,1)
-    y_all = np.concatenate([data[1] for data in datasets])
-
-    model = LogisticRegression()
-    model.fit(X_all, y_all)
-
-    max_new = max(data_dict[i][2] for i in data_dict)
-
-    X_pred = np.arange(0, max_new, 10).reshape(-1, 1)
-    y_pred = model.predict(X_pred)
-
 
     for i in data_dict:
         plt.scatter(data_dict[i][0], data_dict[i][1], label=i)
-    plt.plot(X_pred, y_pred, color='blue', linewidth=3, label='Predicted')
-    plt.xlabel('X (Feature)')
-    plt.ylabel('y (Target Variable)')
-    plt.title('Lin Regression for all')
+    plt.xlabel('X (Months since Publication)')
+    plt.ylabel('y (Times Cited)')
     plt.legend()
     plt.show() 
-
 
 
 if __name__ == '__main__':
@@ -158,6 +151,3 @@ if __name__ == '__main__':
     if len(args) != 1:
         globals()[args[1]](*args[2:])
 
-
-
-gen_log_reg()
